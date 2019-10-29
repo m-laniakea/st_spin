@@ -6,7 +6,6 @@ from typing import (
 from typing_extensions import (
         Final,
 )
-import spidev
 
 class SpiStub:
     def xfer2(self, data: List[int]) -> None:

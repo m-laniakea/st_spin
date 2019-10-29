@@ -6,6 +6,7 @@ from typing import (
 from typing_extensions import (
         Final,
 )
+import spidev
 
 from . import StSpinDevice
 
