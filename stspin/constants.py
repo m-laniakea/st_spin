@@ -2,6 +2,14 @@ from typing_extensions import (
         Final,
 )
 
+# {{{ Misc
+DIR_FWD = 1
+DIR_REV = 0
+
+ACT_RESET_POS = 0
+ACT_SET_MARK = 1
+# }}}
+
 # {{{ Commands
 CMD_GO_HOME: Final      = 0x70
 CMD_GO_MARK: Final      = 0x78
