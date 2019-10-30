@@ -1,22 +1,25 @@
 from typing import (
-        List,
-        Optional,
-        Tuple,
+    List,
+    Optional,
+    Tuple,
 )
 from typing_extensions import (
-        Final,
+    Final,
 )
 import spidev
 
 from . import StSpinDevice
 
+
 class StSpinChain:
     """Class for constructing a chain of SPIN devices"""
     def __init__(
-            self, busy_pin: int, total_devices: int, spi_select: Tuple[int, int],
+            self, busy_pin: int, total_devices: int,
+            spi_select: Tuple[int, int],
             chip_select_pin: Optional[int] = None) -> None:
         """
-        :chip_select_pin: Chip select pin, if different from hardware SPI CS pin
+        :chip_select_pin: Chip select pin,
+        if different from hardware SPI CS pin
         :busy_pin: Pin to read busy status from
         :total_devices: Total number of devices in chain
         :spi_select: A SPI bus, device pair, e.g. (0, 0)
@@ -47,9 +50,9 @@ class StSpinChain:
         assert(position < self._total_devices)
 
         return StSpinDevice(
-                position,
-                self._busy_pin,
-                self._total_devices,
-                self._spi,
-                self._chip_select_pin,
-            )
+            position,
+            self._busy_pin,
+            self._total_devices,
+            self._spi,
+            self._chip_select_pin,
+        )

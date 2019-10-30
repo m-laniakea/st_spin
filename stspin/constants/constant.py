@@ -1,6 +1,7 @@
 from typing_extensions import (
-        Final,
+    Final,
 )
+
 
 class Constant:
     DirForward: Final       = 0x01

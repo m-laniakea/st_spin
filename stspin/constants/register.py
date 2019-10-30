@@ -1,9 +1,10 @@
 from typing import (
-        Dict,
+    Dict,
 )
 from typing_extensions import (
-        Final,
+    Final,
 )
+
 
 class Register:
     Acc: Final              = 0x05
@@ -37,12 +38,13 @@ class Register:
         """get the register size in bytes
 
         :register: Register to check
-        :returns: Register ize in bytes
+        :returns: Register size in bytes
 
         """
         assert(register in RegisterSize)
 
         return RegisterSize[register]
+
 
 RegisterSize: Final[Dict[int, int]] = {
     Register.Acc:       2,

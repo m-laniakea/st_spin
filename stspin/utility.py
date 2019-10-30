@@ -1,6 +1,7 @@
 from typing import (
-        List,
+    List,
 )
+
 
 def getByteCount(value: int) -> int:
     """Calculate the number of bytes required to represent value
@@ -12,6 +13,7 @@ def getByteCount(value: int) -> int:
     assert(value >= 0)
 
     return (value.bit_length() + 7) // 8
+
 
 def resizeToLength(array: List[int], length: int) -> List[int]:
     """Resizes array, 0-extending the first positions,

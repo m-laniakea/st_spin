@@ -1,32 +1,36 @@
 from typing import (
-        List,
-        Optional,
-        Tuple,
+    List,
+    Optional,
+    Tuple,
 )
 from typing_extensions import (
-        Final,
+    Final,
 )
 
 from .constants import (
-        Command,
-        Constant,
-        Register,
+    Command,
+    Constant,
+    Register,
 )
 from .utility import toByteArrayWithLength
+
 
 class SpiStub:
     def xfer2(self, data: List[int]) -> None:
         pass
+
 
 class StSpinDevice:
     """Class providing access to a single SPIN device"""
 
     def __init__(
             self, position: int, busy_pin: int,
-            total_devices: int, spi: SpiStub, chip_select_pin: Optional[int] = None):
+            total_devices: int, spi: SpiStub,
+            chip_select_pin: Optional[int] = None):
         """
         :position: Position in chain, where 0 is the last device in chain
-        :chip_select_pin: Chip select pin, if different from hardware SPI CS pin
+        :chip_select_pin: Chip select pin,
+        if different from hardware SPI CS pin
         :busy_pin: Pin to read busy status from
         :total_devices: Total number of devices in chain
         :spi: SPI object used for serial communication
