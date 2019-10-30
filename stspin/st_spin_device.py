@@ -56,7 +56,7 @@ class StSpinDevice:
         self._spi.xfer2(buffer)
         # TODO: CS HIGH
 
-    def _write_multiple(self, data: List[int]) -> None:
+    def _writeMultiple(self, data: List[int]) -> None:
         """Write each byte in list to device
         Used to combine calls to _write
 
@@ -73,4 +73,4 @@ class StSpinDevice:
         value_bytes = toByteArrayWithLength(value, Register.getSize(register))
         set_command = Command.ParamSet | register
 
-        self._write_multiple([set_command] + value_bytes)
+        self._writeMultiple([set_command] + value_bytes)
