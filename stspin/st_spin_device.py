@@ -7,6 +7,13 @@ from typing_extensions import (
         Final,
 )
 
+from .constants import (
+        Command,
+        Constant,
+        Register,
+)
+from .utility import toByteArrayWithLength
+
 class SpiStub:
     def xfer2(self, data: List[int]) -> None:
         pass
@@ -53,3 +60,13 @@ class StSpinDevice:
         """
         for data_byte in data:
             self._write(data_byte)
+
+    def setRegister(self, register: int, value: int) -> None:
+        """Set the specified register to the given value
+        :register: The register location
+        :value: Value register should be set to
+        """
+        value_bytes = toByteArrayWithLength(value, Register.getSize(register))
+        set_command = Command.ParamSet | register
+
+        self._write_multiple([set_command] + value_bytes)
