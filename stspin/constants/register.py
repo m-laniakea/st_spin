@@ -1,3 +1,6 @@
+from typing import (
+        Dict,
+)
 from typing_extensions import (
         Final,
 )
@@ -28,3 +31,43 @@ class Register:
     StepMode: Final         = 0x16
     ThOcd: Final            = 0x13
     ThStl: Final            = 0x14
+
+    @staticmethod
+    def getSize(register: int) -> int:
+        """get the register size in bytes
+
+        :register: Register to check
+        :returns: Register ize in bytes
+
+        """
+        assert(register in RegisterSize)
+
+        return RegisterSize[register]
+
+RegisterSize: Final[Dict[int, int]] = {
+    Register.Acc:       2,
+    Register.AdcOut:    1,
+    Register.AlarmEn:   1,
+    Register.Dec:       2,
+    Register.Config:    2,
+    Register.KTherm:    1,
+    Register.KvalAcc:   1,
+    Register.KvalDec:   1,
+    Register.KvalHold:  1,
+    Register.KvalRun:   1,
+    Register.Mark:      3,
+    Register.PosAbs:    3,
+    Register.PosEl:     2,
+    Register.SlpFnAcc:  1,
+    Register.SlpFnDec:  1,
+    Register.SlpSt:     1,
+    Register.Speed:     3,
+    Register.SpeedFS:   2,
+    Register.SpeedInt:  2,
+    Register.SpeedMax:  2,
+    Register.SpeedMin:  2,
+    Register.Status:    2,
+    Register.StepMode:  1,
+    Register.ThOcd:     1,
+    Register.ThStl:     1,
+}
