@@ -65,6 +65,20 @@ class StSpinDevice:
         for data_byte in data:
             self._write(data_byte)
 
+    def _writeCommand(
+            self, command: int,
+            payload: Optional[List[int]] = None) -> None:
+        """Write command to device with payload (if any)
+
+        :command: Command to write
+        :payload: Payload (if any)
+
+        """
+        self._write(command)
+
+        if payload is not None:
+            self._writeMultiple(payload)
+
     def setRegister(self, register: int, value: int) -> None:
         """Set the specified register to the given value
         :register: The register location
@@ -73,4 +87,4 @@ class StSpinDevice:
         value_bytes = toByteArrayWithLength(value, Register.getSize(register))
         set_command = Command.ParamSet | register
 
-        self._writeMultiple([set_command] + value_bytes)
+        self._writeCommand(set_command, value_bytes)
