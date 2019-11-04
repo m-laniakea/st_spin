@@ -4,8 +4,9 @@ from typing_extensions import (
 
 
 class Constant:
-    DirForward: Final       = 0x01
-    DirReverse: Final       = 0x00
+    DirReverse: Final           = 0
+    DirForward: Final           = 1
+    DirMax: Final               = 2
 
-    ActResetPos: Final      = 0x00
-    ActSetMark: Final       = 0x01
+    ActResetPos: Final          = (0 << 3)
+    ActSetMark: Final           = (1 << 3)
