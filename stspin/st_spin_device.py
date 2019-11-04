@@ -110,3 +110,28 @@ class StSpinDevice:
         PayloadSize = Command.getPayloadSize(Command.Run)
 
         self._writeCommand(Command.Run | direction, speed, PayloadSize)
+
+    def hiZHard(self) -> None:
+        """Stop motors abruptly, release holding current
+
+        """
+        self._writeCommand(Command.HiZHard)
+
+    def hiZSoft(self) -> None:
+        """Stop motors, release holding current
+        :returns: TODO
+
+        """
+        self._writeCommand(Command.HiZSoft)
+
+    def stopHard(self) -> None:
+        """Stop motors abruptly, maintain holding current
+
+        """
+        self._writeCommand(Command.StopHard)
+
+    def stopSoft(self) -> None:
+        """Stop motors, maintain holding current
+
+        """
+        self._writeCommand(Command.StopSoft)
