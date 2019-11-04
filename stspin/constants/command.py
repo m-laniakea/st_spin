@@ -1,3 +1,6 @@
+from typing import (
+    Dict,
+)
 from typing_extensions import (
     Final,
 )
@@ -23,3 +26,35 @@ class Command:
     StepClock: Final        = 0x58  # ORed with DIR
     StopHard:  Final        = 0xB8
     StopSoft: Final         = 0xB0
+
+    @staticmethod
+    def getPayloadSize(command: int) -> int:
+        """return size of payload in bytes expected to follow command
+
+        :command: command to query
+        :returns: payload size in bytes
+
+        """
+        assert(command in PayloadSize)
+
+        return PayloadSize[command]
+
+
+PayloadSize: Final[Dict[int, int]] = {
+    Command.GoHome:         0,
+    Command.GoMark:         0,
+    Command.GoTo:           3,
+    Command.GoToDir:        3,
+    Command.GoUntil:        3,
+    Command.HiZHard:        0,
+    Command.HiZSoft:        0,
+    Command.Nop:            0,
+    Command.Move:           3,
+    Command.ReleaseSw:      0,
+    Command.ResetDevice:    0,
+    Command.ResetPos:       0,
+    Command.Run:            3,
+    Command.StepClock:      0,
+    Command.StopHard:       0,
+    Command.StopSoft:       0,
+}
