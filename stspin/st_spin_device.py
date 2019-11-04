@@ -67,24 +67,46 @@ class StSpinDevice:
 
     def _writeCommand(
             self, command: int,
-            payload: Optional[List[int]] = None) -> None:
+            payload: Optional[int] = None,
+            payload_size: Optional[int] = None) -> None:
         """Write command to device with payload (if any)
 
         :command: Command to write
         :payload: Payload (if any)
+        :payload_size: Payload size in bytes
 
         """
         self._write(command)
 
-        if payload is not None:
-            self._writeMultiple(payload)
+        if (payload_size is not None and payload is not None
+                and payload_size > 0):
+            self._writeMultiple(toByteArrayWithLength(payload, payload_size))
 
     def setRegister(self, register: int, value: int) -> None:
         """Set the specified register to the given value
         :register: The register location
         :value: Value register should be set to
         """
-        value_bytes = toByteArrayWithLength(value, Register.getSize(register))
+        RegisterSize = Register.getSize(register)
         set_command = Command.ParamSet | register
 
-        self._writeCommand(set_command, value_bytes)
+        self._writeCommand(set_command, value, RegisterSize)
+
+    def run(self, steps_per_second: float, direction: int) -> None:
+        """Run the motor at the given steps per second, in the
+        given direction
+
+        :steps_per_second: Steps per second up to 15625.
+        0.015 step/s resolution
+        :direction: Direction as declared in constant
+
+        """
+        assert(direction >= 0)
+        assert(direction < Constant.DirMax)
+        assert(steps_per_second >= 0)
+        assert(steps_per_second <= Constant.MaxStepsPerSecond)
+
+        speed = int(steps_per_second * Constant.SpsToSpeed)
+        PayloadSize = Command.getPayloadSize(Command.Run)
+
+        self._writeCommand(Command.Run | direction, speed, PayloadSize)
