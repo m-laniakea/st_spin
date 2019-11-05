@@ -54,3 +54,20 @@ def toByteArrayWithLength(value: int, length: int) -> List[int]:
 
     """
     return resizeToLength(toByteArray(value), length)
+
+
+def toInt(byte_array: List[int]) -> int:
+    """Convert a byte array to an integer
+
+    :byte_array: Byte array with MSB first
+    :returns: Single integer equivalent to given byte array
+
+    """
+    multiplier = 256 ** len(byte_array)
+    result = 0
+
+    for byte in byte_array:
+        multiplier //= 256
+        result += byte * multiplier
+
+    return result
