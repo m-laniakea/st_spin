@@ -12,7 +12,10 @@ from .constants import (
     Constant,
     Register,
 )
-from .utility import toByteArrayWithLength
+from .utility import (
+    toByteArrayWithLength,
+    toInt,
+)
 
 
 class SpiStub:
@@ -100,6 +103,19 @@ class StSpinDevice:
         set_command = Command.ParamSet | register
 
         self._writeCommand(set_command, value, RegisterSize)
+
+    def getRegister(self, register: int) -> int:
+        """Fetches a register's contents and returns the current value
+
+        :register: Register location to be accessed
+        :returns: Value of specified register
+
+        """
+        RegisterSize = Register.getSize(register)
+        self._writeCommand(Command.ParamGet | register)
+
+        response = self._writeMultiple([Command.Nop] * RegisterSize)
+        return toInt(response)
 
     def run(self, steps_per_second: float, direction: int) -> None:
         """Run the motor at the given steps per second, in the
