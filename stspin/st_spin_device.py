@@ -16,7 +16,7 @@ from .utility import toByteArrayWithLength
 
 
 class SpiStub:
-    def xfer2(self, data: List[int]) -> None:
+    def xfer2(self, data: List[int]) -> List[int]:
         pass
 
 
@@ -41,10 +41,11 @@ class StSpinDevice:
         self._total_devices: Final      = total_devices
         self._spi: Final                = spi
 
-    def _write(self, data: int) -> None:
+    def _write(self, data: int) -> int:
         """Write a single byte to the device.
 
         :data: A single byte representing a command or value
+        :return: Returns response byte
         """
         assert(data >= 0)
         assert(data <= 0xFF)
@@ -53,17 +54,24 @@ class StSpinDevice:
         buffer[self._position] = data
 
         # TODO: CS LOW
-        self._spi.xfer2(buffer)
+        response = self._spi.xfer2(buffer)
         # TODO: CS HIGH
 
-    def _writeMultiple(self, data: List[int]) -> None:
+        return response[self._position]
+
+    def _writeMultiple(self, data: List[int]) -> List[int]:
         """Write each byte in list to device
         Used to combine calls to _write
 
         :data: List of single byte values to send
+        :return: List of response bytes
         """
+        response = []
+
         for data_byte in data:
-            self._write(data_byte)
+            response.append(self._write(data_byte))
+
+        return response
 
     def _writeCommand(
             self, command: int,
