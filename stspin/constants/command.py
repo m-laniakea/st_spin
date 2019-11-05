@@ -16,7 +16,7 @@ class Command:
     HiZSoft: Final          = 0xA0
     Nop: Final              = 0x00
     Move: Final             = 0x40  # ORed with DIR. Unuseable while running
-    ParamGet: Final         = 0x80  # ORed with target register value
+    ParamGet: Final         = 0x20  # ORed with target register value
     ParamSet: Final         = 0x00  # ORed with target register value
     ReleaseSw: Final        = 0x92  # ORed with ACT, DIR
     ResetDevice: Final      = 0xC0
