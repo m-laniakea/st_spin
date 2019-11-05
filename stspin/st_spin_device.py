@@ -78,9 +78,10 @@ class StSpinDevice:
         """
         self._write(command)
 
-        if (payload_size is not None and payload is not None
-                and payload_size > 0):
-            self._writeMultiple(toByteArrayWithLength(payload, payload_size))
+        if payload is None:
+            return
+
+        self._writeMultiple(toByteArrayWithLength(payload, payload_size))
 
     def setRegister(self, register: int, value: int) -> None:
         """Set the specified register to the given value
@@ -119,7 +120,6 @@ class StSpinDevice:
 
     def hiZSoft(self) -> None:
         """Stop motors, release holding current
-        :returns: TODO
 
         """
         self._writeCommand(Command.HiZSoft)
