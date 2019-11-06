@@ -117,6 +117,22 @@ class StSpinDevice:
         response = self._writeMultiple([Command.Nop] * RegisterSize)
         return toInt(response)
 
+    def move(self, direction: int, steps: int) -> None:
+        """Move motor in specified direction for n steps
+
+        :direction: Motor direction
+        :steps: Number of (micro)steps to take
+
+        """
+        assert(direction >= 0)
+        assert(direction < Constant.DirMax)
+        assert(steps >= 0)
+        assert(steps <= Constant.MaxSteps)
+
+        PayloadSize = Command.getPayloadSize(Command.Move)
+
+        self._writeCommand(Command.Move | direction, steps, PayloadSize)
+
     def run(self, steps_per_second: float, direction: int) -> None:
         """Run the motor at the given steps per second, in the
         given direction
