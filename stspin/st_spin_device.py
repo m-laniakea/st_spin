@@ -11,6 +11,7 @@ from .constants import (
     Command,
     Constant,
     Register,
+    Status,
 )
 from .utility import (
     toByteArrayWithLength,
@@ -184,3 +185,14 @@ class StSpinDevice:
 
         """
         return self._writeCommand(Command.Status)
+
+    def isBusy(self) -> bool:
+        """Checks busy status of the device
+        :returns: True if device is busy, else False
+
+        """
+        # We use getRegister instead of getStatus
+        # So as not to clear any warning flags
+        status = self.getRegister(Register.Status)
+
+        return False if (status & Status.NotBusy) else True
