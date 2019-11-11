@@ -62,37 +62,39 @@ class StSpinDevice:
 
         return response[self._position]
 
-    def _writeMultiple(self, data: List[int]) -> List[int]:
+    def _writeMultiple(self, data: List[int]) -> int:
         """Write each byte in list to device
         Used to combine calls to _write
 
         :data: List of single byte values to send
-        :return: List of response bytes
+        :return: Response bytes as int
         """
         response = []
 
         for data_byte in data:
             response.append(self._write(data_byte))
 
-        return response
+        return toInt(response)
 
     def _writeCommand(
             self, command: int,
             payload: Optional[int] = None,
-            payload_size: Optional[int] = None) -> None:
+            payload_size: Optional[int] = None) -> int:
         """Write command to device with payload (if any)
 
         :command: Command to write
         :payload: Payload (if any)
         :payload_size: Payload size in bytes
-
+        :return: Response bytes as int
         """
-        self._write(command)
+        response = self._write(command)
 
         if payload is None:
-            return
+            return response
 
-        self._writeMultiple(toByteArrayWithLength(payload, payload_size))
+        return self._writeMultiple(
+            toByteArrayWithLength(payload, payload_size)
+        )
 
     def setRegister(self, register: int, value: int) -> None:
         """Set the specified register to the given value
@@ -114,8 +116,7 @@ class StSpinDevice:
         RegisterSize = Register.getSize(register)
         self._writeCommand(Command.ParamGet | register)
 
-        response = self._writeMultiple([Command.Nop] * RegisterSize)
-        return toInt(response)
+        return self._writeMultiple([Command.Nop] * RegisterSize)
 
     def move(self, direction: int, steps: int) -> None:
         """Move motor in specified direction for n steps
