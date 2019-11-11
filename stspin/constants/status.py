@@ -4,10 +4,10 @@ from typing_extensions import (
 
 class SwitchStatus:
     EventNone: Final        = 0
-    EventFallingEdge: Final = 1  # Indicates switch just closed
+    EventFallingEdge: Final = Status.SwitchEvent  # Switch just closed
 
     Closed: Final           = 0
-    Open: Final             = 1
+    Open: Final             = Status.SwitchFlag
 
 
 class MotorStatus:
