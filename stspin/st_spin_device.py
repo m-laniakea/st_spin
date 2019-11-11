@@ -176,3 +176,11 @@ class StSpinDevice:
 
         """
         self._writeCommand(Command.StopSoft)
+
+    def getStatus(self) -> int:
+        """Get status register
+        Resets alarm flags. Does not reset HiZ
+        :returns: 2 bytes status as an int
+
+        """
+        return self._writeCommand(Command.Status)
