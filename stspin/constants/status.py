@@ -2,6 +2,7 @@ from typing_extensions import (
     Final,
 )
 
+
 class SwitchStatus:
     EventNone: Final        = 0
     EventFallingEdge: Final = Status.SwitchEvent  # Switch just closed
