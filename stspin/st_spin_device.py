@@ -45,6 +45,8 @@ class StSpinDevice:
         self._total_devices: Final      = total_devices
         self._spi: Final                = spi
 
+        self._direction                 = Constant.DirForward
+
     def _write(self, data: int) -> int:
         """Write a single byte to the device.
 
