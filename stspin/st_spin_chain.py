@@ -45,7 +45,25 @@ class StSpinChain:
         # }}}
 
     def create(self, position: int) -> StSpinDevice:
-        """Create a new SPIN device at the specified chain location"""
+        """
+                   +----------+
+              MOSI |   MCU    | MISO
+       +-----------+          +---------------+
+       |           +----------+               |
+       |                                      |
+       |                                      |
+       |             SPIN ICs                 |
+       |   +-----+     +-----+     +-----+    |
+       |SDI|     |     |     |     |     |SDO |
+       +---+  2  +-----+  1  +-----+  0  +----+
+           |     |     |     |     |     |
+           |     |     |     |     |     |
+           +-----+     +-----+     +-----+
+        Create a new SPIN device at the specified chain location
+        :position: Device position in chain
+        :return: A newly-instantiated StSpinDevice
+
+        """
         assert(position >= 0)
         assert(position < self._total_devices)
 
