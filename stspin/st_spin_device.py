@@ -134,7 +134,6 @@ class StSpinDevice:
 
         self._writeCommand(Command.Move | self._direction, steps, PayloadSize)
 
-
     def run(self, steps_per_second: float) -> None:
         """Run the motor at the given steps per second
 
@@ -149,6 +148,17 @@ class StSpinDevice:
         PayloadSize = Command.getPayloadSize(Command.Run)
 
         self._writeCommand(Command.Run | self._direction, speed, PayloadSize)
+
+    def setDirection(self, direction: int) -> None:
+        """Set motor direction. Does not affect active movement
+
+        :direction: Direction as declared in Constant
+
+        """
+        assert(direction >= 0)
+        assert(direction < Constant.DirMax)
+
+        self._direction = direction
 
     def hiZHard(self) -> None:
         """Stop motors abruptly, release holding current
