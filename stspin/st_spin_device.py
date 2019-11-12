@@ -121,40 +121,34 @@ class StSpinDevice:
 
         return self._writeMultiple([Command.Nop] * RegisterSize)
 
-    def move(self, direction: int, steps: int) -> None:
-        """Move motor in specified direction for n steps
+    def move(self, steps: int) -> None:
+        """Move motor n steps
 
-        :direction: Motor direction
         :steps: Number of (micro)steps to take
 
         """
-        assert(direction >= 0)
-        assert(direction < Constant.DirMax)
         assert(steps >= 0)
         assert(steps <= Constant.MaxSteps)
 
         PayloadSize = Command.getPayloadSize(Command.Move)
 
-        self._writeCommand(Command.Move | direction, steps, PayloadSize)
+        self._writeCommand(Command.Move | self._direction, steps, PayloadSize)
 
-    def run(self, steps_per_second: float, direction: int) -> None:
-        """Run the motor at the given steps per second, in the
-        given direction
 
-        :steps_per_second: Steps per second up to 15625.
+    def run(self, steps_per_second: float) -> None:
+        """Run the motor at the given steps per second
+
+        :steps_per_second: Full steps per second up to 15625.
         0.015 step/s resolution
-        :direction: Direction as declared in constant
 
         """
-        assert(direction >= 0)
-        assert(direction < Constant.DirMax)
         assert(steps_per_second >= 0)
         assert(steps_per_second <= Constant.MaxStepsPerSecond)
 
         speed = int(steps_per_second * Constant.SpsToSpeed)
         PayloadSize = Command.getPayloadSize(Command.Run)
 
-        self._writeCommand(Command.Run | direction, speed, PayloadSize)
+        self._writeCommand(Command.Run | self._direction, speed, PayloadSize)
 
     def hiZHard(self) -> None:
         """Stop motors abruptly, release holding current
