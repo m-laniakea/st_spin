@@ -8,10 +8,10 @@ from typing_extensions import (
 )
 import spidev
 
-from . import StSpinDevice
+from . import SpinDevice
 
 
-class StSpinChain:
+class SpinChain:
     """Class for constructing a chain of SPIN devices"""
     def __init__(
             self, busy_pin: int, total_devices: int,
@@ -44,7 +44,7 @@ class StSpinChain:
         self._spi.cshigh = False
         # }}}
 
-    def create(self, position: int) -> StSpinDevice:
+    def create(self, position: int) -> SpinDevice:
         """
                    +----------+
               MOSI |   MCU    | MISO
@@ -61,13 +61,13 @@ class StSpinChain:
            +-----+     +-----+     +-----+
         Create a new SPIN device at the specified chain location
         :position: Device position in chain
-        :return: A newly-instantiated StSpinDevice
+        :return: A newly-instantiated SpinDevice
 
         """
         assert(position >= 0)
         assert(position < self._total_devices)
 
-        return StSpinDevice(
+        return SpinDevice(
             position,
             self._busy_pin,
             self._total_devices,

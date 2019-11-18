@@ -1,5 +1,5 @@
-from .st_spin_device import StSpinDevice
-from .st_spin_chain import StSpinChain
+from .spin_device import SpinDevice
+from .spin_chain import SpinChain
 
 from .constants import Command
 from .constants import Register

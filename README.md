@@ -12,14 +12,13 @@ Add `stspin` to your list of requirements and install.
 import time  # Used in our example
 
 from stspin import (
-	StSpinChain,
-	StSpinDevice,
+	SpinChain,
 	StCommand,
 	StRegister,
 	StConstant,
 )
 
-device_chain = StSpinChain(
+device_chain = SpinChain(
 	total_devices=3,
 	spi_select=(0, 0)
 )

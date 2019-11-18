@@ -24,7 +24,7 @@ class SpiStub:
         pass
 
 
-class StSpinDevice:
+class SpinDevice:
     """Class providing access to a single SPIN device"""
 
     def __init__(
