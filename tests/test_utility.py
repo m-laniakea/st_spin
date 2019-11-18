@@ -55,5 +55,27 @@ class TestUtility(unittest.TestCase):
         with self.assertRaises(AssertionError):
             resizeToLength([], -1)
 
+    def testToByteArray(self):
+        self.assertEqual(
+            toByteArray(0),
+            [0]
+        )
+
+        self.assertEqual(
+            toByteArray(3),
+            [3]
+        )
+
+        self.assertEqual(
+            toByteArray(0x1FF),
+            [1, 255]
+        )
+
+        self.assertEqual(
+            toByteArray(0x100000000),
+            [1, 0, 0, 0, 0]
+        )
+
+
 if __name__ == '__main__':
     unittest.main()
