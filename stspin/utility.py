@@ -28,6 +28,7 @@ def resizeToLength(array: List[int], length: int) -> List[int]:
     :returns: Resized array or original array
 
     """
+    assert(length >= 0)
     difference = abs(len(array) - length)
 
     if len(array) > length:
