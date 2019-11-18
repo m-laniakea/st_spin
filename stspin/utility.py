@@ -10,7 +10,11 @@ def getByteCount(value: int) -> int:
     :returns: number of bytes to represent the number
 
     """
+
     assert(value >= 0)
+
+    if 0 == value:
+        return 1
 
     return (value.bit_length() + 7) // 8
 
