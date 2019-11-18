@@ -2,23 +2,6 @@ from typing_extensions import (
     Final,
 )
 
-
-class SwitchStatus:
-    EventNone: Final        = 0
-    EventFallingEdge: Final = Status.SwitchEvent  # Switch just closed
-
-    Closed: Final           = 0
-    Open: Final             = Status.SwitchFlag
-
-
-class MotorStatus:
-    Offset: Final           = 5
-    Accelerating: Final     = 0b01 << Offset
-    Decelerating: Final     = 0b10 << Offset
-    ConstantSpeed: Final    = 0b11 << Offset
-    Stopped: Final          = 0b00 << Offset
-
-
 class Status:
     HiZ: Final                  = 0x0001
     NotBusy: Final              = 0x0002  # active low
@@ -34,3 +17,19 @@ class Status:
     NotStepLossA: Final         = 0x2000  # low on stall detect
     NotStepLossB: Final         = 0x4000  # low on stall detect
     StepClockMode: Final        = 0x8000
+
+
+class MotorStatus:
+    Offset: Final           = 5
+    Accelerating: Final     = 0b01 << Offset
+    Decelerating: Final     = 0b10 << Offset
+    ConstantSpeed: Final    = 0b11 << Offset
+    Stopped: Final          = 0b00 << Offset
+
+
+class SwitchStatus:
+    EventNone: Final        = 0
+    EventFallingEdge: Final = Status.SwitchEvent  # Switch just closed
+
+    Closed: Final           = 0
+    Open: Final             = Status.SwitchFlag
