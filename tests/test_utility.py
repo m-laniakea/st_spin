@@ -26,5 +26,34 @@ class TestUtility(unittest.TestCase):
         with self.assertRaises(AssertionError):
             getByteCount(-1)
 
+    def testResizeToLength(self):
+        self.assertEqual(
+            resizeToLength([], 1),
+            [0]
+        )
+
+        self.assertEqual(
+            resizeToLength(['a'], 0),
+            []
+        )
+
+        self.assertEqual(
+            resizeToLength(['a', 'b', 'c'], 3),
+            ['a', 'b', 'c']
+        )
+
+        self.assertEqual(
+            resizeToLength([1, 2, 3], 1),
+            [3]
+        )
+
+        self.assertEqual(
+            resizeToLength([], 3),
+            [0, 0, 0]
+        )
+
+        with self.assertRaises(AssertionError):
+            resizeToLength([], -1)
+
 if __name__ == '__main__':
     unittest.main()
