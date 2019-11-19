@@ -1,5 +1,10 @@
 from .command import Command
-from .constant import Constant
+
+from .constant import (
+    Constant,
+    SpinValue,
+)
+
 from .register import Register
 
 from .status import (
