@@ -9,9 +9,10 @@ from stspin.utility import (
     toInt,
 )
 
+
 class TestUtility(unittest.TestCase):
 
-    def testGetByteCount(self):
+    def testGetByteCount(self) -> None:
         self.assertEqual(getByteCount(0), 1)
         self.assertEqual(getByteCount(1), 1)
 
@@ -26,20 +27,20 @@ class TestUtility(unittest.TestCase):
         with self.assertRaises(AssertionError):
             getByteCount(-1)
 
-    def testResizeToLength(self):
+    def testResizeToLength(self) -> None:
         self.assertEqual(
             resizeToLength([], 1),
             [0]
         )
 
         self.assertEqual(
-            resizeToLength(['a'], 0),
+            resizeToLength([1], 0),
             []
         )
 
         self.assertEqual(
-            resizeToLength(['a', 'b', 'c'], 3),
-            ['a', 'b', 'c']
+            resizeToLength([1, 2, 3], 3),
+            [1, 2, 3]
         )
 
         self.assertEqual(
@@ -55,7 +56,7 @@ class TestUtility(unittest.TestCase):
         with self.assertRaises(AssertionError):
             resizeToLength([], -1)
 
-    def testToByteArray(self):
+    def testToByteArray(self) -> None:
         self.assertEqual(
             toByteArray(0),
             [0]

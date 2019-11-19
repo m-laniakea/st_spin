@@ -2,6 +2,7 @@ from typing_extensions import (
     Final,
 )
 
+
 class Status:
     HiZ: Final                  = 0x0001
     NotBusy: Final              = 0x0002  # active low
