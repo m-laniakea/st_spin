@@ -90,9 +90,14 @@ class SpinDevice:
         :payload_size: Payload size in bytes
         :return: Response bytes as int
         """
+        # payload and payload_size must be either both present, or both absent
+        assert((payload is None) != (payload_size is None))
+
         response = self._write(command)
 
-        if payload is None:
+        # payload_size does not need to be checked here,
+        # but mypy is not quite that advanced yet
+        if payload is None or payload_size is None:
             return response
 
         return self._writeMultiple(
