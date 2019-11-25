@@ -38,12 +38,12 @@ class SpinValue:
 
 
 class Constant:
-    DirReverse: Final           = 0
-    DirForward: Final           = 1
-    DirMax: Final               = 2
+    DirReverse: Final           = SpinValue(0)
+    DirForward: Final           = SpinValue(1)
+    DirMax: Final               = SpinValue(2)
 
-    ActResetPos: Final          = (0 << 3)
-    ActSetMark: Final           = (1 << 3)
+    ActResetPos: Final          = SpinValue(0 << 3)
+    ActSetMark: Final           = SpinValue(1 << 3)
 
     MaxStepsPerSecond: Final[float]     = 15625.0
     MaxSteps: Final                     = int(2 ** 22)
