@@ -9,7 +9,6 @@ class SpinValue:
 
     """
     Value: Final[int]
-    Type: Final = 'SpinValue'
 
     def __init__(self, value: int) -> None:
         assert(value >= 0)
