@@ -1,3 +1,8 @@
+from typing import (
+    Callable,
+    Union,
+)
+
 from typing_extensions import (
     Final,
 )
@@ -14,14 +19,19 @@ class SpinValue:
         assert(value >= 0)
         self.Value = value
 
-    def __eq__(self, other: object) -> bool:
+    def _compare(self, other: object, comparator: Callable[[int, int], bool]) \
+            -> Union[bool, 'NotImplemented']:
+
         if isinstance(other, int):
-            return self.Value == other
+            return comparator(self.Value, other)
 
-        if not isinstance(other, SpinValue):
-            return NotImplemented
+        if isinstance(other, SpinValue):
+            return comparator(self.Value, other.Value)
 
-        return self.Value == other.Value
+        return NotImplemented
+
+    def __eq__(self, other: object) -> bool:
+        return self._compare(other, int.__eq__)
 
     def __or__(self, other: object) -> object:
         if isinstance(other, int):
