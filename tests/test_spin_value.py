@@ -30,6 +30,46 @@ class TestUtility(unittest.TestCase):
         self.assertEqual(SpinValue(1) == 1, True)
         self.assertEqual(1 == SpinValue(1), True)
 
+        self.assertEqual(SpinValue(2) > SpinValue(1), True)
+        self.assertEqual(SpinValue(2) > SpinValue(2), False)
+        self.assertEqual(SpinValue(2) > SpinValue(3), False)
+        self.assertEqual(SpinValue(2) > (1), True)
+        self.assertEqual(SpinValue(2) > (2), False)
+        self.assertEqual(SpinValue(2) > (3), False)
+
+        with self.assertRaises(TypeError):
+            SpinValue(2) > '1'
+
+        self.assertEqual(SpinValue(2) >= SpinValue(1), True)
+        self.assertEqual(SpinValue(2) >= SpinValue(2), True)
+        self.assertEqual(SpinValue(2) >= SpinValue(3), False)
+        self.assertEqual(SpinValue(2) >= (1), True)
+        self.assertEqual(SpinValue(2) >= (2), True)
+        self.assertEqual(SpinValue(2) >= (3), False)
+
+        with self.assertRaises(TypeError):
+            SpinValue(2) >= '1'
+
+        self.assertEqual(SpinValue(2) < SpinValue(1), False)
+        self.assertEqual(SpinValue(2) < SpinValue(2), False)
+        self.assertEqual(SpinValue(2) < SpinValue(3), True)
+        self.assertEqual(SpinValue(2) < (1), False)
+        self.assertEqual(SpinValue(2) < (2), False)
+        self.assertEqual(SpinValue(2) < (3), True)
+
+        with self.assertRaises(TypeError):
+            SpinValue(2) < '1'
+
+        self.assertEqual(SpinValue(2) <= SpinValue(1), False)
+        self.assertEqual(SpinValue(2) <= SpinValue(2), True)
+        self.assertEqual(SpinValue(2) <= SpinValue(3), True)
+        self.assertEqual(SpinValue(2) <= (1), False)
+        self.assertEqual(SpinValue(2) <= (2), True)
+        self.assertEqual(SpinValue(2) <= (3), True)
+
+        with self.assertRaises(TypeError):
+            SpinValue(2) <= '1'
+
 
 if __name__ == '__main__':
     unittest.main()
