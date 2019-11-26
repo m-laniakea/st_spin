@@ -42,6 +42,18 @@ class SpinValue:
 
         return SpinValue(self.Value | other.Value)
 
+    def __lt__(self, other: object) -> bool:
+        return self._compare(other, int.__lt__)
+
+    def __gt__(self, other: object) -> bool:
+        return self._compare(other, int.__gt__)
+
+    def __le__(self, other: object) -> bool:
+        return self._compare(other, int.__le__)
+
+    def __ge__(self, other: object) -> bool:
+        return self._compare(other, int.__ge__)
+
     def __repr__(self) -> str:
         return f'{self.Value}'
 
