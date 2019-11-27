@@ -30,16 +30,22 @@ class SpinValue:
             total_bytes: Optional[int] = None) -> None:
 
         if isinstance(value, list):
+            bytes = value
             value = toInt(value)
 
-        if total_bytes is None:
-            total_bytes = getByteCount(value)
+        else:
+            if total_bytes is None:
+                # No desired number of bytes, just use exact number of bytes
+                total_bytes = getByteCount(value)
 
-        assert(total_bytes >= 1)
+            assert(total_bytes >= 1)
+
+            bytes = toByteArrayWithLength(value, total_bytes)
+
         assert(value >= 0)
 
         self.Value = value
-        self.Bytes = toByteArrayWithLength(value, total_bytes)
+        self.Bytes = bytes
 
     def _compare(self, other: object, comparator: Callable[[int, int], bool]) \
             -> Union[bool, 'NotImplemented']:

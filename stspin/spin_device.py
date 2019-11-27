@@ -116,7 +116,7 @@ class SpinDevice:
         RegisterSize = Register.getSize(register)
         self._writeCommand(Command.ParamGet | register)
 
-        response_bytes = self._write(SpinValue(Command.Nop, RegisterSize))
+        response_bytes = self._write(SpinValue([Command.Nop] * RegisterSize))
         return toInt(response_bytes)
 
     def move(self, steps: int) -> None:
