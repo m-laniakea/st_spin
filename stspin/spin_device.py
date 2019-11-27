@@ -47,21 +47,19 @@ class SpinDevice:
 
         self._direction                 = Constant.DirForward
 
-    def _write(self, data: int) -> int:
+    def _writeByte(self, byte_value: int) -> int:
         """Write a single byte to the device.
 
-        :data: A single byte representing a command or value
+        :byte_value: A single byte to send to the device
         :return: Returns response byte
         """
-        assert(data >= 0)
-        assert(data <= 0xFF)
+        assert(byte_value >= 0)
+        assert(byte_value <= 0xFF)
 
         buffer = [0] * self._total_devices
-        buffer[self._position] = data
+        buffer[self._position] = byte_value
 
-        # TODO: CS LOW
         response = self._spi.xfer2(buffer)
-        # TODO: CS HIGH
 
         return response[self._position]
 
