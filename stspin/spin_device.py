@@ -87,14 +87,16 @@ class SpinDevice:
         :payload_size: Payload size in bytes
         :return: Response bytes as int
         """
-        response = self._write(command)
+        response = self._writeByte(command)
 
         if payload is None:
             return response
 
-        return self._writeMultiple(
-            toByteArrayWithLength(payload, payload_size)
+        response_bytes = self._write(
+            SpinValue(payload, payload_size)
         )
+
+        return toInt(response_bytes)
 
     def setRegister(self, register: int, value: int) -> None:
         """Set the specified register to the given value
