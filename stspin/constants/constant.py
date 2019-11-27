@@ -1,10 +1,15 @@
 from typing import (
     Callable,
+    List,
     Union,
 )
 
 from typing_extensions import (
     Final,
+)
+
+from ..utility import (
+    toInt,
 )
 
 
@@ -15,8 +20,13 @@ class SpinValue:
     """
     Value: Final[int]
 
-    def __init__(self, value: int) -> None:
+    def __init__(self, value: Union[int, List[int]]) -> None:
+
+        if isinstance(value, list):
+            value = toInt(value)
+
         assert(value >= 0)
+
         self.Value = value
 
     def _compare(self, other: object, comparator: Callable[[int, int], bool]) \
