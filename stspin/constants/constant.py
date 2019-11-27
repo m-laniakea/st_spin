@@ -1,6 +1,7 @@
 from typing import (
     Callable,
     List,
+    Optional,
     Union,
 )
 
@@ -10,6 +11,8 @@ from typing_extensions import (
 
 from ..utility import (
     toInt,
+    getByteCount,
+    toByteArrayWithLength,
 )
 
 
@@ -19,15 +22,22 @@ class SpinValue:
 
     """
     Value: Final[int]
+    Bytes: Final[List[int]]
 
-    def __init__(self, value: Union[int, List[int]]) -> None:
+    def __init__(self, value: Union[int, List[int]],
+            total_bytes: Optional[int] = None) -> None:
 
         if isinstance(value, list):
             value = toInt(value)
 
+        if total_bytes is None:
+            total_bytes = getByteCount(value)
+
+        assert(total_bytes >= 1)
         assert(value >= 0)
 
         self.Value = value
+        self.Bytes = toByteArrayWithLength(value, total_bytes)
 
     def _compare(self, other: object, comparator: Callable[[int, int], bool]) \
             -> Union[bool, 'NotImplemented']:
