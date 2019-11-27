@@ -14,7 +14,6 @@ from .constants import (
     Status,
 )
 from .utility import (
-    toByteArrayWithLength,
     toInt,
 )
 
@@ -63,19 +62,19 @@ class SpinDevice:
 
         return response[self._position]
 
-    def _writeMultiple(self, data: List[int]) -> int:
-        """Write each byte in list to device
-        Used to combine calls to _write
+    def _write(self, value: SpinValue) -> List[int]:
+        """Write each byte in data to device
+        Used to combine calls to _writeByte
 
-        :data: List of single byte values to send
-        :return: Response bytes as int
+        :value: SpinValue containing Bytes to send
+        :return: Response as a list of bytes
         """
         response = []
 
-        for data_byte in data:
-            response.append(self._write(data_byte))
+        for byte_value in value.Bytes:
+            response.append(self._writeByte(byte_value))
 
-        return toInt(response)
+        return response
 
     def _writeCommand(
             self, command: int,
@@ -117,7 +116,8 @@ class SpinDevice:
         RegisterSize = Register.getSize(register)
         self._writeCommand(Command.ParamGet | register)
 
-        return self._writeMultiple([Command.Nop] * RegisterSize)
+        response_bytes = self._write(SpinValue(Command.Nop, RegisterSize))
+        return toInt(response_bytes)
 
     def move(self, steps: int) -> None:
         """Move motor n steps
