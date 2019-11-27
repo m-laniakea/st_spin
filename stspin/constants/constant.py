@@ -24,7 +24,9 @@ class SpinValue:
     Value: Final[int]
     Bytes: Final[List[int]]
 
-    def __init__(self, value: Union[int, List[int]],
+    def __init__(
+            self,
+            value: Union[int, List[int]],
             total_bytes: Optional[int] = None) -> None:
 
         if isinstance(value, list):
