@@ -1,9 +1,26 @@
 from typing import (
     Dict,
+    Optional,
 )
 from typing_extensions import (
     Final,
 )
+
+
+from .constant import SpinValue
+
+
+class SpinCommand(SpinValue):
+    PayloadSize: Final[Optional[int]]
+
+    def __init__(
+            self,
+            value: int,
+            payload_size: Optional[int],
+            total_bytes: Optional[int] = None) -> None:
+
+        super().__init__(value, total_bytes)
+        self.PayloadSize = payload_size
 
 
 class Command:
