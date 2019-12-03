@@ -76,9 +76,7 @@ class SpinDevice:
 
         return response
 
-    def _writeCommand(
-            self, command: SpinCommand,
-            payload: Optional[SpinValue] = None) -> SpinValue:
+    def _writeCommand(self, command: SpinCommand) -> SpinValue:
         """Write command to device with payload (if any)
 
         :command: Command to write
@@ -87,8 +85,8 @@ class SpinDevice:
         """
         response = self._write(command)
 
-        if payload is not None:
-            response += self._write(payload)
+        if command.payload is not None:
+            response += self._write(command.payload)
 
         return SpinValue(response)
 
@@ -98,9 +96,9 @@ class SpinDevice:
         :value: Value register should be set to
         """
         _value = SpinValue(value, Register.getSize(register))
-        set_command = Command.ParamSet | register
+        set_command = (Command.ParamSet | register).setPayload(_value)
 
-        return self._writeCommand(set_command, _value)
+        return self._writeCommand(set_command)
 
     def getRegister(self, register: int) -> SpinValue:
         """Fetches a register's contents and returns the current value
@@ -124,9 +122,8 @@ class SpinDevice:
         assert(steps >= 0)
         assert(steps <= Constant.MaxSteps)
 
-        payload = SpinValue(steps, Command.Move.PayloadSize)
-
-        self._writeCommand(Command.Move | self._direction, payload)
+        command = (Command.Move | self._direction).setPayload(steps)
+        self._writeCommand(command)
 
     def run(self, steps_per_second: float) -> None:
         """Run the motor at the given steps per second
@@ -139,9 +136,9 @@ class SpinDevice:
         assert(steps_per_second <= Constant.MaxStepsPerSecond)
 
         speed = int(steps_per_second * Constant.SpsToSpeed)
-        payload = SpinValue(speed, Command.Run.PayloadSize)
+        command = (Command.Run | self._direction).setPayload(speed)
 
-        self._writeCommand(Command.Run | self._direction, payload)
+        self._writeCommand(command)
 
     def setDirection(self, direction: int) -> None:
         """Set motor direction. Does not affect active movement

@@ -1,5 +1,6 @@
 from typing import (
     Optional,
+    Union,
 )
 from typing_extensions import (
     Final,
