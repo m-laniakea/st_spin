@@ -77,38 +77,32 @@ class SpinDevice:
         return response
 
     def _writeCommand(
-            self, command: int,
-            payload: Optional[int] = None,
-            payload_size: Optional[int] = None) -> int:
+            self, command: SpinCommand,
+            payload: Optional[SpinValue] = None) -> SpinValue:
         """Write command to device with payload (if any)
 
         :command: Command to write
         :payload: Payload (if any)
-        :payload_size: Payload size in bytes
-        :return: Response bytes as int
+        :return: Response as SpinValue
         """
-        response = self._writeByte(command)
+        response = self._write(command)
 
-        if payload is None:
-            return response
+        if payload is not None:
+            response += self._write(payload)
 
-        response_bytes = self._write(
-            SpinValue(payload, payload_size)
-        )
+        return SpinValue(response)
 
-        return toInt(response_bytes)
-
-    def setRegister(self, register: int, value: int) -> None:
+    def setRegister(self, register: int, value: int) -> SpinValue:
         """Set the specified register to the given value
         :register: The register location
         :value: Value register should be set to
         """
-        RegisterSize = Register.getSize(register)
+        _value = SpinValue(value, Register.getSize(register))
         set_command = Command.ParamSet | register
 
-        self._writeCommand(set_command, value, RegisterSize)
+        return self._writeCommand(set_command, _value)
 
-    def getRegister(self, register: int) -> int:
+    def getRegister(self, register: int) -> SpinValue:
         """Fetches a register's contents and returns the current value
 
         :register: Register location to be accessed
@@ -119,7 +113,7 @@ class SpinDevice:
         self._writeCommand(Command.ParamGet | register)
 
         response_bytes = self._write(SpinValue([Command.Nop] * RegisterSize))
-        return toInt(response_bytes)
+        return SpinValue(response_bytes)
 
     def move(self, steps: int) -> None:
         """Move motor n steps
@@ -130,9 +124,9 @@ class SpinDevice:
         assert(steps >= 0)
         assert(steps <= Constant.MaxSteps)
 
-        PayloadSize = Command.getPayloadSize(Command.Move)
+        payload = SpinValue(steps, Command.Move.PayloadSize)
 
-        self._writeCommand(Command.Move | self._direction, steps, PayloadSize)
+        self._writeCommand(Command.Move | self._direction, payload)
 
     def run(self, steps_per_second: float) -> None:
         """Run the motor at the given steps per second
@@ -145,9 +139,9 @@ class SpinDevice:
         assert(steps_per_second <= Constant.MaxStepsPerSecond)
 
         speed = int(steps_per_second * Constant.SpsToSpeed)
-        PayloadSize = Command.getPayloadSize(Command.Run)
+        payload = SpinValue(speed, Command.Run.PayloadSize)
 
-        self._writeCommand(Command.Run | self._direction, speed, PayloadSize)
+        self._writeCommand(Command.Run | self._direction, payload)
 
     def setDirection(self, direction: int) -> None:
         """Set motor direction. Does not affect active movement
@@ -184,13 +178,16 @@ class SpinDevice:
         """
         self._writeCommand(Command.StopSoft)
 
-    def getStatus(self) -> int:
+    def getStatus(self) -> SpinValue:
         """Get status register
         Resets alarm flags. Does not reset HiZ
-        :returns: 2 bytes status as an int
+        :returns: 2 bytes status as SpinValue
 
         """
-        return self._writeCommand(Command.Status)
+        self._writeCommand(Command.Status)
+        response_bytes = self._write(SpinValue([Command.Nop] * 2))
+
+        return SpinValue(response_bytes)
 
     def isBusy(self) -> bool:
         """Checks busy status of the device
