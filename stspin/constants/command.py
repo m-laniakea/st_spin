@@ -11,6 +11,7 @@ from .constant import SpinValue
 
 class SpinCommand(SpinValue):
     PayloadSize: Final[Optional[int]]
+    payload: Optional[SpinValue]
 
     def __init__(
             self,
@@ -20,6 +21,18 @@ class SpinCommand(SpinValue):
 
         super().__init__(value, total_bytes)
         self.PayloadSize = payload_size
+
+    def setPayload(self, payload: Union[int, SpinValue]) -> None:
+        """Set a payload to add to this command
+
+        :payload: A SpinValue to accompany the system command
+
+        """
+        if isinstance(payload, int):
+            assert(self.PayloadSize is not None)
+            payload = SpinValue(payload, self.PayloadSize)
+
+        self.payload = payload
 
 
 class Command:
