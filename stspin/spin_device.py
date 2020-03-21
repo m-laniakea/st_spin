@@ -202,7 +202,9 @@ class SpinDevice:
         :returns: 2 bytes status as an int
 
         """
-        return self._writeCommand(Command.StatusGet)
+        self._writeCommand(Command.StatusGet)
+
+        return self._writeMultiple([Command.Nop] * 2)
 
     def isBusy(self) -> bool:
         """Checks busy status of the device
