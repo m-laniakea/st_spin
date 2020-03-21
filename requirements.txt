@@ -1,2 +1,2 @@
-mypy==0.740
+typing-extensions==3.7.4.1
 spidev==3.4
