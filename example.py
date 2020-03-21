@@ -17,7 +17,7 @@ if '__main__' == __name__:
     stChain = SpinChain(
         total_devices=2,
         spi_select=(0, 0),
-        chip_select_pin=None, # Not implemented, relies on spidev for CS pin
+        spi_transfer=None, # Custom spi transfer in place of spidev possible
     )
 
     motorMain = stChain.create(1)

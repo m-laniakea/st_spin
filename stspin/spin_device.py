@@ -1,4 +1,5 @@
 from typing import (
+    Callable,
     List,
     Optional,
 )
@@ -38,8 +39,9 @@ class SpinDevice:
 
     def __init__(
             self, position: int,
-            total_devices: int, spi: SpiStub,
-        )
+            total_devices: int,
+            spi_transfer: Callable[[List[int]], List[int]],
+        ):
         """
         :position: Position in chain, where 0 is the last device in chain
         if different from hardware SPI CS pin
@@ -48,7 +50,7 @@ class SpinDevice:
         """
         self._position: Final           = position
         self._total_devices: Final      = total_devices
-        self._spi: Final                = spi
+        self._spi_transfer: Final       = spi_transfer
 
         self._direction                 = Constant.DirForward
 
@@ -64,7 +66,7 @@ class SpinDevice:
         buffer = [0] * self._total_devices
         buffer[self._position] = data
 
-        response = self._spi.xfer2(buffer)
+        response = self._spi_transfer(buffer)
 
         return response[self._position]
 
