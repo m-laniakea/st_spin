@@ -7,7 +7,6 @@ from typing import (
 from typing_extensions import (
     Final,
 )
-import spidev
 
 from . import SpinDevice
 
@@ -42,6 +41,7 @@ class SpinChain:
             self._spi_transfer = spi_transfer
 
         elif spi_select is not None:
+            import spidev
             self._spi: Final = spidev.SpiDev()
 
             bus, device = spi_select
