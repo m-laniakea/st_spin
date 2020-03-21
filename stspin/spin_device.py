@@ -91,7 +91,7 @@ class SpinDevice:
         :return: Response bytes as int
         """
         # payload and payload_size must be either both present, or both absent
-        assert((payload is None) != (payload_size is None))
+        assert((payload is None) == (payload_size is None))
 
         response = self._write(command)
 
