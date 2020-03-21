@@ -1,2 +1,2 @@
 typing-extensions==3.7.4.1
-spidev==3.4
+#spidev==3.4 # Needed if not using custom spi_transfer function

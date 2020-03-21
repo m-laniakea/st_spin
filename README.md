@@ -3,13 +3,13 @@ A Python library for interfacing with [ST Spin Family devices](https://www.digik
 specifically the ST Micro **L6470**, **L6472**, **L6474**, and **L6480** ICs.
 Can be used nearly without modification with similar ICs.
 
-Currently this project relies on [spidev's](https://pypi.org/project/spidev/ "spidev") SPI transfer function.
+If you do not specify your own spi_transfer function when creating a SpinChain, this project relies on [spidev's](https://pypi.org/project/spidev/ "spidev") SPI transfer function.
 
-Meant for use in embedded Linux applictions.
 Python 3.6 or greater recommended.
 
 ## Getting Started
 `pip install st-spin`
+`pip install spidev` (if you intend to use /dev/spi and spidev's spi transfer function)
 
 **Add imports**
 ```python
@@ -28,7 +28,6 @@ from stspin import (
 stChain = SpinChain(
     total_devices=2,
     spi_select=(0, 0),
-    chip_select_pin=None, # Not implemented, relies on spidev for CS pin
 )
 ```
 This assumes the spi device is at 0, 0.
@@ -65,7 +64,7 @@ while motorMain.isBusy():
     time.sleep(0.2)
 # }}}
 
-# Head back
+# {{{ Head back
 motorMain.setDirection(StConstant.DirReverse)
 motorMain.move(steps=420000)
 while motorMain.isBusy():
@@ -78,8 +77,27 @@ motorMain.hiZHard()
 ```
 ### More details
 For details on the SPI setup, see [create()](https://github.com/m-laniakea/st_spin/blob/dev/stspin/spin_chain.py#L47) in spin_chain.py.
-See [example.py](https://github.com/m-laniakea/st_spin/blob/dev/example.py "example.py")
+See [example.py](https://github.com/m-laniakea/st_spin/blob/dev/example.py "example.py").
 
+**Creating your own spi_transfer function**
+You may use your own spi transfer function in place of spidev's xfer2.
+```
+def custom_spi_transfer(buffer: List[int]) -> List[int]:
+    # TODO: Implement me
+    pass
+    
+stChain = SpinChain(
+    total_devices=2,
+    spi_transfer=custom_spi_transfer,
+)
+```
+`custom_spi_transfer()` must take a list of bytes as int,
+and return a same-length list of bytes as int from the MISO pin.
+
+It should handle latching using the Chip Select pin, and transfer data with MSB first in
+SPI Mode 3 (sample on rising edge, shift out on falling edge).
+
+On these devices, Chip Select is active low.
 ### Troubleshooting
 getStatus() is your friend. Feel free to use getPrettyStatus() under utility.py.
 The manual is also your friend.
