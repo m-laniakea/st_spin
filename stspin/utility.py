@@ -2,6 +2,12 @@ from typing import (
     List,
 )
 
+from .constants import (
+    Constant,
+    Status,
+    MotorStatus,
+    SwitchStatus,
+)
 
 def getByteCount(value: int) -> int:
     """Calculate the number of bytes required to represent value
@@ -11,7 +17,7 @@ def getByteCount(value: int) -> int:
 
     """
 
-    assert(value >= 0)
+    assert value >= 0
 
     if 0 == value:
         return 1
@@ -28,7 +34,7 @@ def resizeToLength(array: List[int], length: int) -> List[int]:
     :returns: Resized array or original array
 
     """
-    assert(length >= 0)
+    assert length >= 0
     difference = abs(len(array) - length)
 
     if len(array) > length:
@@ -76,3 +82,65 @@ def toInt(byte_array: List[int]) -> int:
         result += byte * multiplier
 
     return result
+
+def getPrettyStatus(status: int) -> str:
+    """Return a str representing the status
+
+    :status: Status as 2 bytes
+    :returns: str representing the status
+
+    """
+    Steploss = '' if (status & Status.NotStepLossB) and \
+        (status & Status.NotStepLossA) else '!STEP LOSS'
+
+    Overcurrent = '' if (status & Status.NotOvercurrent) else '!OVER CURRENT'
+
+    ThermalShutdown = '' if (status & Status.NotThermalShutdown) else \
+        '!THERMAL SHUTDOWN'
+
+    ThermalWarning = '' if (status & Status.NotThermalWarning) else \
+        'Thermal Warning'
+
+    Undervoltage = '' if (status & Status.NotUndervoltage) else \
+        '!UNDER VOLTAGE'
+
+    CmdWrong = '!INVALID COMMAND' if (status & Status.CmdWrong) else ''
+    NotPerformed = 'Cmd Ignored' if (status & Status.CmdNotPerformed) else ''
+
+    Motor = 'Motor: '
+    if status & MotorStatus.ConstantSpeed:
+        Motor += 'Constant Speed'
+    elif status & MotorStatus.Accelerating:
+        Motor += 'Accelerating'
+    elif status & MotorStatus.Decelerating:
+        Motor += 'Decelerating'
+    else:
+        Motor += 'Stopped'
+
+    Direction = 'Direction: '
+    Direction += 'Forward' if (status & Constant.DirForward) else 'Reverse'
+
+    Busy = 'Busy: '
+    Busy += 'False' if (status & Status.NotBusy) else 'True'
+
+    HiZ = 'HiZ: '
+    HiZ += 'True' if (status & Status.HiZ) else 'False'
+
+    StatusLines = [
+        Steploss,
+        Overcurrent,
+        ThermalShutdown,
+        Undervoltage,
+        CmdWrong,
+        ThermalWarning,
+        NotPerformed,
+        Motor,
+        Direction,
+        Busy,
+        HiZ,
+    ]
+
+    # Filter out blank lines
+    StatusLinesClean = filter(None, StatusLines)
+
+    return '\n'.join(StatusLinesClean)

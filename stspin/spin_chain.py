@@ -1,5 +1,4 @@
 from typing import (
-    List,
     Optional,
     Tuple,
 )
@@ -14,20 +13,18 @@ from . import SpinDevice
 class SpinChain:
     """Class for constructing a chain of SPIN devices"""
     def __init__(
-            self, busy_pin: int, total_devices: int,
+            self, total_devices: int,
             spi_select: Tuple[int, int],
             chip_select_pin: Optional[int] = None) -> None:
         """
         :chip_select_pin: Chip select pin,
         if different from hardware SPI CS pin
-        :busy_pin: Pin to read busy status from
         :total_devices: Total number of devices in chain
         :spi_select: A SPI bus, device pair, e.g. (0, 0)
         """
-        assert(total_devices > 0)
+        assert total_devices > 0
 
         self._chip_select_pin: Final   = chip_select_pin
-        self._busy_pin: Final          = busy_pin
         self._total_devices: Final     = total_devices
 
         # {{{ SPI setup
@@ -64,12 +61,11 @@ class SpinChain:
         :return: A newly-instantiated SpinDevice
 
         """
-        assert(position >= 0)
-        assert(position < self._total_devices)
+        assert position >= 0
+        assert position < self._total_devices
 
         return SpinDevice(
             position,
-            self._busy_pin,
             self._total_devices,
             self._spi,
             self._chip_select_pin,

@@ -5,7 +5,6 @@ from typing_extensions import (
     Final,
 )
 
-
 class Register:
     Acc: Final              = 0x05
     AdcOut: Final           = 0x12
@@ -41,7 +40,7 @@ class Register:
         :returns: Register size in bytes
 
         """
-        assert(register in RegisterSize)
+        assert register in RegisterSize
 
         return RegisterSize[register]
 

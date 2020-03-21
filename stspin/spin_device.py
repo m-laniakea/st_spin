@@ -1,7 +1,6 @@
 from typing import (
     List,
     Optional,
-    Tuple,
 )
 from typing_extensions import (
     Final,
@@ -20,7 +19,17 @@ from .utility import (
 
 
 class SpiStub:
+    """Type definition for Spi class
+    """
     def xfer2(self, data: List[int]) -> List[int]:
+        """spidev.xfer2:
+            1. Toggles Chip Select
+            2. transfers list of bytes
+            3. Toggles Chip Select (to latch data)
+
+        :data: List of bytes to write
+        :return: List of bytes from MISO pin
+        """
         pass
 
 
@@ -28,20 +37,18 @@ class SpinDevice:
     """Class providing access to a single SPIN device"""
 
     def __init__(
-            self, position: int, busy_pin: int,
+            self, position: int,
             total_devices: int, spi: SpiStub,
             chip_select_pin: Optional[int] = None):
         """
         :position: Position in chain, where 0 is the last device in chain
         :chip_select_pin: Chip select pin,
         if different from hardware SPI CS pin
-        :busy_pin: Pin to read busy status from
         :total_devices: Total number of devices in chain
         :spi: SPI object used for serial communication
         """
         self._position: Final           = position
         self._chip_select_pin: Final    = chip_select_pin
-        self._busy_pin: Final           = busy_pin
         self._total_devices: Final      = total_devices
         self._spi: Final                = spi
 
@@ -53,8 +60,8 @@ class SpinDevice:
         :data: A single byte representing a command or value
         :return: Returns response byte
         """
-        assert(data >= 0)
-        assert(data <= 0xFF)
+        assert data >= 0
+        assert data <= 0xFF
 
         buffer = [0] * self._total_devices
         buffer[self._position] = data
@@ -90,8 +97,8 @@ class SpinDevice:
         :payload_size: Payload size in bytes
         :return: Response bytes as int
         """
-        # payload and payload_size must be either both present, or both absent
-        assert((payload is None) == (payload_size is None))
+        assert (payload is None) == (payload_size is None), \
+            'payload and payload_size must be either both None, xor present'
 
         response = self._write(command)
 
@@ -132,8 +139,8 @@ class SpinDevice:
         :steps: Number of (micro)steps to take
 
         """
-        assert(steps >= 0)
-        assert(steps <= Constant.MaxSteps)
+        assert steps >= 0
+        assert steps <= Constant.MaxSteps
 
         PayloadSize = Command.getPayloadSize(Command.Move)
 
@@ -146,8 +153,8 @@ class SpinDevice:
         0.015 step/s resolution
 
         """
-        assert(steps_per_second >= 0)
-        assert(steps_per_second <= Constant.MaxStepsPerSecond)
+        assert steps_per_second >= 0
+        assert steps_per_second <= Constant.MaxStepsPerSecond
 
         speed = int(steps_per_second * Constant.SpsToSpeed)
         PayloadSize = Command.getPayloadSize(Command.Run)
@@ -160,8 +167,8 @@ class SpinDevice:
         :direction: Direction as declared in Constant
 
         """
-        assert(direction >= 0)
-        assert(direction < Constant.DirMax)
+        assert direction >= 0
+        assert direction < Constant.DirMax
 
         self._direction = direction
 
@@ -195,7 +202,9 @@ class SpinDevice:
         :returns: 2 bytes status as an int
 
         """
-        return self._writeCommand(Command.Status)
+        self._writeCommand(Command.StatusGet)
+
+        return self._writeMultiple([Command.Nop] * 2)
 
     def isBusy(self) -> bool:
         """Checks busy status of the device
