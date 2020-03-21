@@ -1,5 +1,4 @@
 from typing import (
-    List,
     Optional,
     Tuple,
 )
@@ -24,7 +23,7 @@ class SpinChain:
         :total_devices: Total number of devices in chain
         :spi_select: A SPI bus, device pair, e.g. (0, 0)
         """
-        assert(total_devices > 0)
+        assert total_devices > 0
 
         self._chip_select_pin: Final   = chip_select_pin
         self._busy_pin: Final          = busy_pin
@@ -64,8 +63,8 @@ class SpinChain:
         :return: A newly-instantiated SpinDevice
 
         """
-        assert(position >= 0)
-        assert(position < self._total_devices)
+        assert position >= 0
+        assert position < self._total_devices
 
         return SpinDevice(
             position,

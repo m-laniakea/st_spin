@@ -1,7 +1,6 @@
 from typing import (
     List,
     Optional,
-    Tuple,
 )
 from typing_extensions import (
     Final,
@@ -20,7 +19,17 @@ from .utility import (
 
 
 class SpiStub:
+    """Type definition for Spi class
+    """
     def xfer2(self, data: List[int]) -> List[int]:
+        """spidev.xfer2:
+            1. Toggles Chip Select
+            2. transfers list of bytes
+            3. Toggles Chip Select (to latch data)
+
+        :data: List of bytes to write
+        :return: List of bytes from MISO pin
+        """
         pass
 
 
@@ -53,8 +62,8 @@ class SpinDevice:
         :data: A single byte representing a command or value
         :return: Returns response byte
         """
-        assert(data >= 0)
-        assert(data <= 0xFF)
+        assert data >= 0
+        assert data <= 0xFF
 
         buffer = [0] * self._total_devices
         buffer[self._position] = data
@@ -90,8 +99,8 @@ class SpinDevice:
         :payload_size: Payload size in bytes
         :return: Response bytes as int
         """
-        # payload and payload_size must be either both present, or both absent
-        assert((payload is None) == (payload_size is None))
+        assert (payload is None) == (payload_size is None), \
+            'payload and payload_size must be either both None, xor present'
 
         response = self._write(command)
 
@@ -132,8 +141,8 @@ class SpinDevice:
         :steps: Number of (micro)steps to take
 
         """
-        assert(steps >= 0)
-        assert(steps <= Constant.MaxSteps)
+        assert steps >= 0
+        assert steps <= Constant.MaxSteps
 
         PayloadSize = Command.getPayloadSize(Command.Move)
 
@@ -146,8 +155,8 @@ class SpinDevice:
         0.015 step/s resolution
 
         """
-        assert(steps_per_second >= 0)
-        assert(steps_per_second <= Constant.MaxStepsPerSecond)
+        assert steps_per_second >= 0
+        assert steps_per_second <= Constant.MaxStepsPerSecond
 
         speed = int(steps_per_second * Constant.SpsToSpeed)
         PayloadSize = Command.getPayloadSize(Command.Run)
@@ -160,8 +169,8 @@ class SpinDevice:
         :direction: Direction as declared in Constant
 
         """
-        assert(direction >= 0)
-        assert(direction < Constant.DirMax)
+        assert direction >= 0
+        assert direction < Constant.DirMax
 
         self._direction = direction
 
@@ -195,7 +204,7 @@ class SpinDevice:
         :returns: 2 bytes status as an int
 
         """
-        return self._writeCommand(Command.Status)
+        return self._writeCommand(Command.StatusGet)
 
     def isBusy(self) -> bool:
         """Checks busy status of the device

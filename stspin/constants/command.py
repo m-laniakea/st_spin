@@ -24,7 +24,7 @@ class Command:
     Run: Final              = 0x50  # ORed with DIR
     StatusGet: Final        = 0xD0
     StepClock: Final        = 0x58  # ORed with DIR
-    StopHard:  Final        = 0xB8
+    StopHard: Final         = 0xB8
     StopSoft: Final         = 0xB0
 
     @staticmethod
@@ -35,7 +35,7 @@ class Command:
         :returns: payload size in bytes
 
         """
-        assert(command in PayloadSize)
+        assert command in PayloadSize
 
         return PayloadSize[command]
 

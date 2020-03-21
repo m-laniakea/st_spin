@@ -11,7 +11,7 @@ def getByteCount(value: int) -> int:
 
     """
 
-    assert(value >= 0)
+    assert value >= 0
 
     if 0 == value:
         return 1
@@ -28,7 +28,7 @@ def resizeToLength(array: List[int], length: int) -> List[int]:
     :returns: Resized array or original array
 
     """
-    assert(length >= 0)
+    assert length >= 0
     difference = abs(len(array) - length)
 
     if len(array) > length:
