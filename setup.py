@@ -11,4 +11,8 @@ setup(
       packages=find_packages(exclude=['tests']),
       long_description=open('README.md').read(),
       long_description_content_type='text/markdown',
+      install_requires=[
+          'spidev',
+          'typing_extensions',
+      ],
       zip_safe=False)
