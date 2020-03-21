@@ -1,50 +1,91 @@
 # ST Spin Family Interface
 A Python library for interfacing with [ST Spin Family devices](https://www.digikey.fi/en/product-highlight/s/stmicroelectronics/motor-control-easyspin "ST Spin Family devices"),
 specifically the ST Micro **L6470**, **L6472**, **L6474**, and **L6480** ICs.
+Can be used nearly without modification with similar ICs.
 
-Currently this project has a single dependency: [spidev](https://pypi.org/project/spidev/ "spidev").
+Currently this project relies on [spidev's](https://pypi.org/project/spidev/ "spidev") SPI transfer function.
+
+Meant for use in embedded Linux applictions.
+Python 3.6 or greater recommended.
 
 ## Getting Started
-Add `stspin` to your list of requirements and install.
+`pip install st-spin`
 
-**Create a device chain**
-```
+**Add imports**
+```python
 import time  # Used in our example
 
 from stspin import (
-	SpinChain,
-	StCommand,
-	StRegister,
-	StConstant,
+    SpinChain,
+    SpinDevice,
+    Constant as StConstant,
+    Register as StRegister,
+    utility,
 )
-
-device_chain = SpinChain(
-	total_devices=3,
-	spi_select=(0, 0)
+```
+**Create a device chain**
+```python
+stChain = SpinChain(
+    total_devices=2,
+    spi_select=(0, 0),
+    chip_select_pin=None, # Not implemented, relies on spidev for CS pin
 )
 ```
 This assumes the spi device is at 0, 0.
 
 **Create devices**
-```
-motor_main = device_chain.create_device(0)
-motor_secondary = device_chain.create_device(1)
-```
-In our example, there are three devices in the chain, and **device 0** is furthest along the chain
-from the controlling IC's MOSI pin.
+```python
+motorMain = stChain.create(1)
+motorAux = stChain.create(0)
 
+# Unless you absolutely need holding current,
+# it is good practice to disable the power bridges
+motorMain.hiZHard()
+motorAux.hiZHard()
+```
 **Run basic commands**
 ```
-motor_main.hiZHard()  # It is good practice to set device into HiZ-State before setting parameters
-motor_main.setRegister(StRegister.SpeedMax, 0x022)
-motor_main.move(steps=2200)
+motorMain.setRegister(StRegister.SpeedMax, 0x22)
 
-while motor_main.isBusy():
-	pass
-
-motor_main.setDirection(StConstant.DirReverse)
-
-motor_main.run(220)
+motorMain.run(100)
 time.sleep(3)
-motor_main.stopSoft()
+motorMain.hiZSoft()
+time.sleep(1)
+
+# {{{ Set some registers
+motorMain.setRegister(StRegister.Acc, 0x5)
+motorMain.setRegister(StRegister.Dec, 0x10)
+motorAux.setRegister(StRegister.Acc, 0x20)
+# }}}
+
+# {{{ Go n steps with both motors
+motorMain.move(steps=420000)
+motorAux.move(steps=420000)
+while motorMain.isBusy():
+    time.sleep(0.2)
+# }}}
+
+# Head back
+motorMain.setDirection(StConstant.DirReverse)
+motorMain.move(steps=420000)
+while motorMain.isBusy():
+    time.sleep(0.2)
+# }}}
+
+# Release holding current
+motorAux.hiZHard()
+motorMain.hiZHard()
 ```
+### More details
+For details on the SPI setup, see [create()](https://github.com/m-laniakea/st_spin/blob/dev/stspin/spin_chain.py#L47) in spin_chain.py
+See [example.py](https://github.com/m-laniakea/st_spin/blob/dev/example.py "example.py")
+
+### Troubleshooting
+getStatus() is your friend. Feel free to use getPrettyStatus() under utility.py.
+The manual is also your friend.
+
+**Q: Why is my motor stalling, loud, or both?**
+Most likely the Back-EMF compensation is not configured properly.
+The correction parameters depend heavily on your motor's ke value (V/Hz), inductance, and phase resistance.
+
+After calculating the parameters using the manufacturer's tool, set KvalAcc, SpeedInt, SlpSt, etc. using setRegister()
