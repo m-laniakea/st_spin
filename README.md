@@ -28,7 +28,6 @@ from stspin import (
 stChain = SpinChain(
     total_devices=2,
     spi_select=(0, 0),
-    chip_select_pin=None, # Not implemented, relies on spidev for CS pin
 )
 ```
 This assumes the spi device is at 0, 0.
@@ -65,7 +64,7 @@ while motorMain.isBusy():
     time.sleep(0.2)
 # }}}
 
-# Head back
+# {{{ Head back
 motorMain.setDirection(StConstant.DirReverse)
 motorMain.move(steps=420000)
 while motorMain.isBusy():

@@ -39,16 +39,14 @@ class SpinDevice:
     def __init__(
             self, position: int,
             total_devices: int, spi: SpiStub,
-            chip_select_pin: Optional[int] = None):
+        )
         """
         :position: Position in chain, where 0 is the last device in chain
-        :chip_select_pin: Chip select pin,
         if different from hardware SPI CS pin
         :total_devices: Total number of devices in chain
         :spi: SPI object used for serial communication
         """
         self._position: Final           = position
-        self._chip_select_pin: Final    = chip_select_pin
         self._total_devices: Final      = total_devices
         self._spi: Final                = spi
 
@@ -66,9 +64,7 @@ class SpinDevice:
         buffer = [0] * self._total_devices
         buffer[self._position] = data
 
-        # TODO: CS LOW
         response = self._spi.xfer2(buffer)
-        # TODO: CS HIGH
 
         return response[self._position]
 

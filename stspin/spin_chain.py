@@ -15,16 +15,14 @@ class SpinChain:
     def __init__(
             self, total_devices: int,
             spi_select: Tuple[int, int],
-            chip_select_pin: Optional[int] = None) -> None:
+        ) -> None:
         """
-        :chip_select_pin: Chip select pin,
         if different from hardware SPI CS pin
         :total_devices: Total number of devices in chain
         :spi_select: A SPI bus, device pair, e.g. (0, 0)
         """
         assert total_devices > 0
 
-        self._chip_select_pin: Final   = chip_select_pin
         self._total_devices: Final     = total_devices
 
         # {{{ SPI setup
@@ -68,5 +66,4 @@ class SpinChain:
             position,
             self._total_devices,
             self._spi,
-            self._chip_select_pin,
         )
