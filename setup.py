@@ -2,7 +2,7 @@ from setuptools import setup, find_packages
 
 setup(
       name='st_spin',
-      version='0.0.1',
+      version='0.0.22',
       url='https://github.com/m-laniakea/st_spin',
       license='GPLv1',
       author='eir',
