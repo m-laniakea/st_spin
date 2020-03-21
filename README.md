@@ -77,7 +77,7 @@ motorAux.hiZHard()
 motorMain.hiZHard()
 ```
 ### More details
-For details on the SPI setup, see [create()](https://github.com/m-laniakea/st_spin/blob/dev/stspin/spin_chain.py#L47) in spin_chain.py
+For details on the SPI setup, see [create()](https://github.com/m-laniakea/st_spin/blob/dev/stspin/spin_chain.py#L47) in spin_chain.py.
 See [example.py](https://github.com/m-laniakea/st_spin/blob/dev/example.py "example.py")
 
 ### Troubleshooting
@@ -88,4 +88,4 @@ The manual is also your friend.
 Most likely the Back-EMF compensation is not configured properly.
 The correction parameters depend heavily on your motor's ke value (V/Hz), inductance, and phase resistance.
 
-After calculating the parameters using the manufacturer's tool, set KvalAcc, SpeedInt, SlpSt, etc. using setRegister()
+After calculating the parameters using the manufacturer's tool, set KvalAcc, SpeedInt, SlpSt, etc. using setRegister().
