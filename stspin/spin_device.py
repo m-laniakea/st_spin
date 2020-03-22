@@ -18,22 +18,6 @@ from .utility import (
     toInt,
 )
 
-
-class SpiStub:
-    """Type definition for Spi class
-    """
-    def xfer2(self, data: List[int]) -> List[int]:
-        """spidev.xfer2:
-            1. Toggles Chip Select
-            2. transfers list of bytes
-            3. Toggles Chip Select (to latch data)
-
-        :data: List of bytes to write
-        :return: List of bytes from MISO pin
-        """
-        pass
-
-
 class SpinDevice:
     """Class providing access to a single SPIN device"""
 
@@ -44,7 +28,6 @@ class SpinDevice:
         ):
         """
         :position: Position in chain, where 0 is the last device in chain
-        if different from hardware SPI CS pin
         :total_devices: Total number of devices in chain
         :spi: SPI object used for serial communication
         """
@@ -63,7 +46,7 @@ class SpinDevice:
         assert data >= 0
         assert data <= 0xFF
 
-        buffer = [0] * self._total_devices
+        buffer = [Command.Nop] * self._total_devices
         buffer[self._position] = data
 
         response = self._spi_transfer(buffer)
