@@ -8,8 +8,9 @@ If you do not specify your own spi_transfer function when creating a SpinChain, 
 Python 3.6 or greater recommended.
 
 ## Getting Started
-`pip install st-spin`
-`pip install spidev` (if you intend to use /dev/spi and spidev's spi transfer function)
+`pip install st-spin` or
+
+`pip install st-spin[spidev]` if you intend to use /dev/spi and spidev's spi transfer function
 
 **Add imports**
 ```python
