@@ -78,9 +78,18 @@ motorMain.hiZHard()
 ```
 ### More details
 For details on the SPI setup, see [create()](https://github.com/m-laniakea/st_spin/blob/dev/stspin/spin_chain.py#L47) in spin_chain.py.
+
 See [example.py](https://github.com/m-laniakea/st_spin/blob/dev/example.py "example.py").
 
+Check available [registers](https://github.com/m-laniakea/st_spin/blob/dev/stspin/constants/register.py) and [commands](https://github.com/m-laniakea/st_spin/blob/dev/stspin/constants/command.py).
+
+**More commands**
+
+All commands are defined, but some are not implemented, e.g. `GoToDir`. 
+Currently you would use Command.getPayloadSize(GoToDir) and device._writeCommand() to run it.
+
 **Creating your own spi_transfer function**
+
 You may use your own spi transfer function in place of spidev's xfer2.
 ```
 def custom_spi_transfer(buffer: List[int]) -> List[int]:
