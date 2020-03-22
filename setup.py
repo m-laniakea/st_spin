@@ -14,4 +14,7 @@ setup(
       install_requires=[
           'typing_extensions',
       ],
+      extras_require={
+          'spidev': ['spidev==3.4'],
+      },
       zip_safe=False)
